@@ -22,6 +22,11 @@ A passing CI run verifies these automated code checks only. It does not prove th
 - Desktop 1440px, tablet, accessibility keyboard/screen-reader, auth screens, signed-in customer/merchant/admin views, media gallery interactions and full cross-browser/device visual QA remain to be performed.
 - No published product content is present; storefront empty states are expected until real merchant catalogue data is reviewed and published.
 
+## Direct live-schema guard checks (verified; no test rows persisted)
+- Attempted to insert a merchant promotion with `status='active'`; the database trigger rejected it with the expected `promotion_activation_not_available_until_checkout_redemption_is_enabled` error. A follow-up count verified zero guard-test rows.
+- Attempted to insert a product with a deliberately mismatched/fake category and division; the database trigger rejected it with the expected `product_category_must_be_active_and_belong_to_division` error. A follow-up count verified zero guard-test rows.
+- These are targeted negative checks of trigger behavior, not a substitute for role-based RLS or end-to-end staging tests.
+
 ## Required role and tenant-isolation UAT (not yet executed)
 Use isolated staging/test accounts and a non-production dataset. Do not create fake users or merchants in the current GOOBT project without explicit approval.
 

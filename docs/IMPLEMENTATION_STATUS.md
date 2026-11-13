@@ -17,7 +17,7 @@ GOOBT has a committed initial foundation and a Cloudflare Pages development prev
 ## Verified engineering checks
 - Customer support intake and platform support case queue were implemented against the live support-case RLS policies and audited `update_support_case` RPC.
 - Customer notification inbox/read-state and unread navigation count use customer-owned notification policies; database events emit in-app notifications for support case creation/status changes and merchant application, merchant entity and settlement review outcomes. External email/SMS delivery and user-authored support replies are not implemented.
-- Merchant promotion drafts are scoped to the active merchant entity. Draft creation is live; a database trigger blocks activation and enforces merchant/division scope. Promotion redemption and checkout discount calculation are intentionally not enabled.
+- Merchant promotion drafts are scoped to the active merchant entity. Draft creation is live; a database trigger blocks activation and enforces merchant/division scope. A direct live-schema negative test rejected an active promotion insert with the expected SQLSTATE; the guard-test row count remained zero. Promotion redemption and checkout discount calculation are intentionally not enabled.
 - Shared integer minor-unit commerce helpers are used for UI currency formatting, cart line totals/subtotals and strict ZAR decimal input parsing; unit tests cover arithmetic, overflow, currency, promo draft validation and catalogue filtering.
 - Initial foundation PR #1 was squash-merged into `main`.
 - Initial foundation GitHub Actions CI passed typecheck, lint, tests and build.
