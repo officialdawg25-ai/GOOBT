@@ -42,3 +42,8 @@ export function validatePromotionDraft(input:PromotionDraftInput):string|null {
   if(start!==null&&end!==null&&end<=start) return 'promotion end must be later than its start';
   return null;
 }
+
+export function filterCatalogueProducts<T extends {division_id:string;name:string;description:string|null}>(products:readonly T[],query:string,divisionId:string|null=null):T[] {
+  const normalizedQuery=query.trim().toLowerCase();
+  return products.filter(product=>(divisionId===null||product.division_id===divisionId)&&(!normalizedQuery||product.name.toLowerCase().includes(normalizedQuery)||(product.description??'').toLowerCase().includes(normalizedQuery)));
+}
