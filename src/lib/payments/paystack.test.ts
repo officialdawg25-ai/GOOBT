@@ -1,5 +1,5 @@
 import {describe,it,expect,vi} from 'vitest';
-import {initializePaystackCandidate,type PaystackInitializeInput} from './paystack';
+import {initializePaystackCandidate,type PaystackInitializeInput} from '../../../supabase/functions/_shared/payments/paystack.ts';
 
 const validInput:PaystackInitializeInput={
   secret_key:'sk_test_candidate_secret',
