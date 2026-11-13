@@ -23,6 +23,8 @@ GOOBT has a committed initial foundation and a Cloudflare Pages development prev
 - Initial foundation GitHub Actions CI passed typecheck, lint, tests and build.
 - Cloudflare Pages foundation preview deployment completed successfully; external browser inspection was not verified in this audit.
 - Supabase security advisor currently reports zero security lint findings after moving privileged RPC implementations into the private schema behind authenticated invoker wrappers.
+- Current direct database counts: 30 public base tables, all 30 with RLS enabled, 50 public RLS policies, 0 Auth users, 0 merchant entities and 0 products. Five business divisions are present and all five are draft; order count remains zero.
+- Supabase performance advisor currently reports 38 unused-index INFO notices and 14 multiple-permissive-policy WARN notices. With zero real Auth users/orders/catalogue workload, unused-index notices are expected; do not remove indexes or merge policies without workload and tenant-isolation tests.
 - Add-to-cart, merchant application/entity/division review, checkout preview and inventory stock adjustment privileged implementations enforce authenticated identity/role and use private schema implementations.
 - Latest direct audit: 30 public application tables, all 30 RLS-enabled, 49 policies, and no public table missing a policy.
 - The storage bucket for product media is private; storage-object read/write policies scope public reads to active published catalogue media and uploads to merchant/product path ownership.
