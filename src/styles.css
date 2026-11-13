@@ -12,3 +12,5 @@
 .media-upload-form input[type=file]{padding:9px;background:#f8f7f2}.media-upload-form button{display:flex;align-items:center;gap:9px}
 .merchant-tools{display:grid;gap:20px}.merchant-tools .workspace-block{margin:0}
 .product-image{width:100%;height:100%;object-fit:cover;display:block}.product-placeholder:has(.product-image){padding:0;overflow:hidden;background:#e9e7df}
+.admin-workspaces{display:grid;gap:22px}.admin-workspaces .workspace-block{margin:0}.merchant-review-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}.merchant-review-controls label{display:flex;flex-direction:column;gap:6px;font-size:10px;color:#77756b}.merchant-review-controls select{padding:8px;border:1px solid #dedbd2;background:#f8f7f2;font:inherit;font-size:11px;color:#191916}.admin-workspaces .workspace-list article{align-items:center}
+@media(max-width:600px){.merchant-review-controls{grid-template-columns:1fr}.admin-workspaces .workspace-list article{align-items:stretch}}
