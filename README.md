@@ -41,3 +41,4 @@ See `docs/IMPLEMENTATION_STATUS.md` for the phase-by-phase ledger and verified/p
 - `docs/COZYWASH_ADAPTER_BLUEPRINT.md` — proposed Phase 6 contract, not a live API
 - `docs/OWNER_BOOTSTRAP.md` — controlled first platform-owner provisioning
 - `docs/CONFIGURATION.md` — preview environment and Auth redirect configuration
+- `docs/SA_COMPLIANCE_READINESS.md` — South African legal, tax, privacy and merchant compliance checklist
