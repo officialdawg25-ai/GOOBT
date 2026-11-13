@@ -7,3 +7,4 @@
 @media(max-width:600px){.workspace-block{padding:18px;margin:24px 0}.workspace-form{grid-template-columns:1fr}.workspace-form label:nth-child(2),.workspace-form label:last-of-type{grid-column:auto}.workspace-form button{grid-column:auto}.workspace-list article{flex-direction:column}.review-actions{width:100%}}
 
 .cart-total{display:flex;justify-content:space-between;align-items:center;padding:24px 0;border-bottom:1px solid #dedbd2;font-size:13px;color:#77756b}.cart-total strong{font-family:Manrope;font-size:20px;font-weight:600;color:#191916}.cart-gate{margin-top:28px}
+.product-price{display:block;margin:10px 0 5px;font-family:Manrope;font-size:14px;font-weight:600;color:#191916}.cart-line-actions{display:flex;flex-direction:column;align-items:flex-end;gap:5px}.cart-line-actions .text-button{margin-top:0;font-size:10px;color:#8a5145}
