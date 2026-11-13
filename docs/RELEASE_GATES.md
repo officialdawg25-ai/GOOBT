@@ -25,8 +25,11 @@ Status labels: VERIFIED = directly checked; PARTIAL = some checks pass; INFERRED
 - No payment provider credentials or sandbox account are available/configured; provider, merchant-of-record and settlement models remain undecided.
 - No merchant legal entity, tax, seller-of-record or settlement model has been supplied/approved.
 - No merchant product/catalogue/inventory data has been supplied; current database remains without real customer/merchant/order seed data.
-- Cloudflare Pages development preview exists and production deployments are disabled; visual browser QA and approved production domain are still unverified.
+- Cloudflare Pages development preview exists and production deployments are disabled. A 390 × 844 mobile full-page visual inspection and 1440 × 900 desktop top-viewport inspection passed without visible horizontal overflow; tablet, authenticated views, accessibility, interaction QA and approved production domain remain unverified.
 - No CozyWash owner-approved API contract or integration credentials exist; the Phase 6 blueprint is proposal-only.
 - No approved privacy policy, customer terms, refund policy or merchant agreement exists. See `SA_COMPLIANCE_READINESS.md` for the legal/compliance review checklist.
+
+- VERIFIED: GitHub migration filenames now exactly match all 23 applied remote Supabase migration versions; no local-only/remote-only version mismatch remains. Migration replay against an empty staging database is still not performed.
+- PARTIAL: CI and mobile visual preview checks have passed; role-based integration/UAT remains blocked because there are no Auth users or merchant test data and no staging branch was provisioned.
 
 A repository build is not proof of a commercially launchable marketplace. Mark every release gate with evidence before production.

@@ -44,7 +44,8 @@ No sample sellers, customer accounts, fake product catalogue, synthetic orders o
 ## Preview deployment audit
 - Cloudflare Pages development project `goobt-commerce-dev` is configured with production deployments disabled; `main` deployments are skipped with reason `production_deployments_disabled`.
 - Preview branch allow-list includes `foundation/goobt-full-platform`, `foundation/merchant-operations-console` and `foundation/goobt-preview-current`.
-- Preview deployment for the merchant/customer operations branch completed successfully (clone, build and deploy stages succeeded). Preview URL: `https://foundation-merchant-operatio.goobt-commerce-dev.pages.dev`. External visual/browser QA is not verified by this report.
+- Current synchronized preview branch deployment `22584b31cb538dae01e8c482b512d42ef275f9c8` completed successfully (clone, build and deploy stages succeeded). Stable branch alias verified from Cloudflare: `https://foundation-goobt-preview-cur.goobt-commerce-dev.pages.dev`.
+- A full-page mobile browser render of the current preview at 390 × 844 CSS pixels was visually inspected; header, hero, division tiles, catalogue controls, empty state and footer fit with no visible horizontal overflow. A desktop 1440 × 900 top-viewport screenshot was also inspected; header and hero layout fit cleanly. Tablet, authenticated customer/merchant/admin views, accessibility and interaction QA remain unverified.
 - The latest main CI run should be considered validated only when the run associated with its current commit has completed successfully.
 
 ## Release blockers before end-to-end production completion
