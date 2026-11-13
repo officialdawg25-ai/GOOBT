@@ -1,0 +1,6 @@
+[functions.payment-intent]
+verify_jwt = true
+[functions.payment-webhook]
+verify_jwt = false
+[functions.cozywash-handoff]
+verify_jwt = true
