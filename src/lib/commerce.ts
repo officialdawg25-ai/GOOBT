@@ -43,7 +43,7 @@ export function validatePromotionDraft(input:PromotionDraftInput):string|null {
   return null;
 }
 
-export function filterCatalogueProducts<T extends {division_id:string;name:string;description:string|null}>(products:readonly T[],query:string,divisionId:string|null=null):T[] {
+export function filterCatalogueProducts<T extends {division_id:string;category_id?:string|null;name:string;description:string|null}>(products:readonly T[],query:string,divisionId:string|null=null,categoryId:string|null=null):T[] {
   const normalizedQuery=query.trim().toLowerCase();
-  return products.filter(product=>(divisionId===null||product.division_id===divisionId)&&(!normalizedQuery||product.name.toLowerCase().includes(normalizedQuery)||(product.description??'').toLowerCase().includes(normalizedQuery)));
+  return products.filter(product=>(divisionId===null||product.division_id===divisionId)&&(categoryId===null||product.category_id===categoryId)&&(!normalizedQuery||product.name.toLowerCase().includes(normalizedQuery)||(product.description??'').toLowerCase().includes(normalizedQuery)));
 }
