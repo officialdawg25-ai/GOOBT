@@ -172,3 +172,104 @@ export async function initializePaystackCandidate(
     reference: data.reference
   };
 }
+
+export type PaystackWebhookVerification = {
+  valid: boolean;
+  mode: 'standard' | 'legacy' | 'none';
+  key_id?: string;
+};
+
+const WEBHOOK_SIGNATURE_HEX = /^[0-9a-f]{128}$/;
+const WEBHOOK_TIMESTAMP_TOLERANCE_SECONDS = 300;
+
+function decodeSignatureHex(hex:string):Uint8Array|null {
+  if(!WEBHOOK_SIGNATURE_HEX.test(hex)) return null;
+  const bytes=new Uint8Array(64);
+  for(let i=0;i<64;i++) bytes[i]=Number.parseInt(hex.slice(i*2,i*2+2),16);
+  return bytes;
+}
+
+function constantTimeBytesEqual(left:Uint8Array,right:Uint8Array):boolean {
+  if(left.length!==right.length) return false;
+  let mismatch=0;
+  for(let i=0;i<left.length;i++) mismatch|=left[i]^right[i];
+  return mismatch===0;
+}
+
+async function hmacSha512(secret:string,message:Uint8Array):Promise<Uint8Array> {
+  const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(secret),{name:'HMAC',hash:'SHA-512'},false,['sign']);
+  return new Uint8Array(await crypto.subtle.sign('HMAC',key,message));
+}
+
+function parseStandardSignatureHeader(header:string,nowSeconds:number):{timestamp:string;entries:Array<{key_id:string;signature:string}>}|null {
+  let timestamp:string|null=null;
+  const entries:Array<{key_id:string;signature:string}>=[];
+  for(const part of header.split(',')){
+    const separator=part.indexOf('=');
+    if(separator<0) continue;
+    const name=part.slice(0,separator).trim();
+    const value=part.slice(separator+1).trim();
+    if(name==='t'){
+      if(timestamp!==null||!/^\d+$/.test(value)) return null;
+      const numeric=Number(value);
+      if(!Number.isSafeInteger(numeric)||Math.abs(nowSeconds-numeric)>WEBHOOK_TIMESTAMP_TOLERANCE_SECONDS) return null;
+      timestamp=value;
+    }else if(name==='v1'){
+      const colon=value.indexOf(':');
+      if(colon<=0) continue;
+      const keyId=value.slice(0,colon);
+      const signature=value.slice(colon+1);
+      if(!keyId.startsWith('whk_')||!WEBHOOK_SIGNATURE_HEX.test(signature)) continue;
+      entries.push({key_id:keyId,signature});
+    }
+  }
+  if(timestamp===null||entries.length===0) return null;
+  return {timestamp,entries};
+}
+
+/**
+ * Verify Paystack's current Paystack-Signature header (timestamped, rotating
+ * whsec secrets) or its legacy x-paystack-signature header (secret-key HMAC).
+ * The raw request bytes must be supplied before JSON parsing.
+ *
+ * If the current header is present but invalid, verification fails closed and
+ * does not downgrade to the legacy header.
+ */
+export async function verifyPaystackWebhookSignature(
+  rawBody:Uint8Array,
+  headers:{paystack_signature?:string|null;x_paystack_signature?:string|null},
+  secrets:{webhook_secrets?:readonly string[];secret_key?:string|null},
+  nowSeconds=Math.floor(Date.now()/1000)
+):Promise<PaystackWebhookVerification>{
+  const standardHeader=headers.paystack_signature?.trim();
+  if(standardHeader){
+    if(!Number.isSafeInteger(nowSeconds)) return {valid:false,mode:'standard'};
+    const parsed=parseStandardSignatureHeader(standardHeader,nowSeconds);
+    if(!parsed||!secrets.webhook_secrets?.length) return {valid:false,mode:'standard'};
+    const prefix=new TextEncoder().encode(parsed.timestamp+'.');
+    const message=new Uint8Array(prefix.length+rawBody.length);
+    message.set(prefix,0);
+    message.set(rawBody,prefix.length);
+    for(const secret of secrets.webhook_secrets){
+      if(!secret) continue;
+      let expected:Uint8Array;
+      try{expected=await hmacSha512(secret,message);}catch{return {valid:false,mode:'standard'};}
+      for(const entry of parsed.entries){
+        const candidate=decodeSignatureHex(entry.signature);
+        if(candidate&&constantTimeBytesEqual(expected,candidate)) return {valid:true,mode:'standard',key_id:entry.key_id};
+      }
+    }
+    return {valid:false,mode:'standard'};
+  }
+  const legacyHeader=headers.x_paystack_signature?.trim();
+  if(legacyHeader){
+    if(!WEBHOOK_SIGNATURE_HEX.test(legacyHeader)||!secrets.secret_key) return {valid:false,mode:'legacy'};
+    const candidate=decodeSignatureHex(legacyHeader);
+    if(!candidate) return {valid:false,mode:'legacy'};
+    try{
+      const expected=await hmacSha512(secrets.secret_key,rawBody);
+      return {valid:constantTimeBytesEqual(expected,candidate),mode:'legacy'};
+    }catch{return {valid:false,mode:'legacy'};}
+  }
+  return {valid:false,mode:'none'};
+}
