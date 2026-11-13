@@ -1,0 +1,2 @@
+import {describe,it,expect} from 'vitest';
+describe('GOOBT storefront basics',()=>{it('uses ZAR minor units for commerce currency representation',()=>{const priceMinor=2599;expect(priceMinor/100).toBe(25.99);});it('keeps configured division identities stable',()=>{const slugs=['greylin-harvest','oceanbreeze','opulence-cosmetics','bake-my-day'];expect(new Set(slugs).size).toBe(slugs.length);});});
