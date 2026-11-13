@@ -21,12 +21,12 @@ Status labels: VERIFIED = directly checked; PARTIAL = some checks pass; INFERRED
 - Mobile viewport, keyboard, accessibility and PWA offline/online checks.
 - Backup/restore and deployment rollback rehearsal.
 
-## External blockers
-- No payment provider credentials or sandbox account were available in the audited project.
-- No merchant legal entity, tax, seller-of-record or settlement model was supplied.
-- No merchant product/catalogue/inventory data was supplied.
-- No GOOBT-specific Cloudflare Pages/Worker deployment or domain was identified.
-- No CozyWash adapter/API contract was supplied.
-- No privacy policy, terms, refund policy or merchant agreement was approved.
+## Current release blockers (rechecked 2026-11-13)
+- No payment provider credentials or sandbox account are available/configured; provider, merchant-of-record and settlement models remain undecided.
+- No merchant legal entity, tax, seller-of-record or settlement model has been supplied/approved.
+- No merchant product/catalogue/inventory data has been supplied; current database remains without real customer/merchant/order seed data.
+- Cloudflare Pages development preview exists and production deployments are disabled; visual browser QA and approved production domain are still unverified.
+- No CozyWash owner-approved API contract or integration credentials exist; the Phase 6 blueprint is proposal-only.
+- No approved privacy policy, customer terms, refund policy or merchant agreement exists. See `SA_COMPLIANCE_READINESS.md` for the legal/compliance review checklist.
 
 A repository build is not proof of a commercially launchable marketplace. Mark every release gate with evidence before production.
