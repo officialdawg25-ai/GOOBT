@@ -25,7 +25,8 @@ A passing CI run verifies these automated code checks only. It does not prove th
 ## Direct live-schema guard checks (verified; no test rows persisted)
 - Attempted to insert a merchant promotion with `status='active'`; the database trigger rejected it with the expected `promotion_activation_not_available_until_checkout_redemption_is_enabled` error. A follow-up count verified zero guard-test rows.
 - Attempted to insert a product with a deliberately mismatched/fake category and division; the database trigger rejected it with the expected `product_category_must_be_active_and_belong_to_division` error. A follow-up count verified zero guard-test rows.
-- These are targeted negative checks of trigger behavior, not a substitute for role-based RLS or end-to-end staging tests.
+- Rollback-transaction smoke checks under the `anon` role returned zero draft divisions, merchant entities and orders; under `authenticated` with no JWT subject they returned zero merchant entities, orders, support cases and notifications.
+- These targeted checks are not a substitute for real customer A/B and merchant A/B RLS tenant-isolation tests or end-to-end staging tests.
 
 ## Required role and tenant-isolation UAT (not yet executed)
 Use isolated staging/test accounts and a non-production dataset. Do not create fake users or merchants in the current GOOBT project without explicit approval.
