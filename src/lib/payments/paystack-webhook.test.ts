@@ -9,7 +9,7 @@ function toHex(bytes:Uint8Array):string {
 
 async function sign(secret:string,message:Uint8Array):Promise<string> {
   const key=await crypto.subtle.importKey('raw',encoder.encode(secret),{name:'HMAC',hash:'SHA-512'},false,['sign']);
-  return toHex(new Uint8Array(await crypto.subtle.sign('HMAC',key,message)));
+  const messageCopy=new Uint8Array(message.byteLength);messageCopy.set(message);const messageBuffer:ArrayBuffer=messageCopy.buffer;return toHex(new Uint8Array(await crypto.subtle.sign('HMAC',key,messageBuffer)));
 }
 
 function standardMessage(timestamp:number,rawBody:Uint8Array):Uint8Array {

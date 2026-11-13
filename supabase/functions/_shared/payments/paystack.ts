@@ -198,7 +198,7 @@ function constantTimeBytesEqual(left:Uint8Array,right:Uint8Array):boolean {
 
 async function hmacSha512(secret:string,message:Uint8Array):Promise<Uint8Array> {
   const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(secret),{name:'HMAC',hash:'SHA-512'},false,['sign']);
-  return new Uint8Array(await crypto.subtle.sign('HMAC',key,message));
+  const messageCopy=new Uint8Array(message.byteLength);messageCopy.set(message);const messageBuffer:ArrayBuffer=messageCopy.buffer;return new Uint8Array(await crypto.subtle.sign('HMAC',key,messageBuffer));
 }
 
 function parseStandardSignatureHeader(header:string,nowSeconds:number):{timestamp:string;entries:Array<{key_id:string;signature:string}>}|null {
