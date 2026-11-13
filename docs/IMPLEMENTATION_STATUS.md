@@ -32,7 +32,6 @@ GOOBT has a committed initial foundation and a Cloudflare Pages development prev
 - Add-to-cart, merchant application/entity/division review, checkout preview and inventory stock adjustment privileged implementations enforce authenticated identity/role and use private schema implementations.
 - Latest direct audit: 30 public application tables, all 30 RLS-enabled, 50 policies, and no public table missing a policy.
 - The storage bucket for product media is private; storage-object read/write policies scope public reads to active published catalogue media and uploads to merchant/product path ownership.
-- Performance advisor still reports unused-index INFO notices in this zero/empty dataset and multiple-permissive-policy WARN notices; these require real workload analysis rather than indiscriminate index/policy removal.
 - Cloudflare production deployment remains explicitly disabled.
 
 ## Data state at last direct count

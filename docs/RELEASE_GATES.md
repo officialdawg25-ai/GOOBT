@@ -25,11 +25,14 @@ Status labels: VERIFIED = directly checked; PARTIAL = some checks pass; INFERRED
 - No payment provider credentials or sandbox account are available/configured; provider, merchant-of-record and settlement models remain undecided.
 - No merchant legal entity, tax, seller-of-record or settlement model has been supplied/approved.
 - No merchant product/catalogue/inventory data has been supplied; current database remains without real customer/merchant/order seed data.
-- Cloudflare Pages development preview exists and production deployments are disabled. A 390 × 844 mobile full-page visual inspection and 1440 × 900 desktop top-viewport inspection passed without visible horizontal overflow; tablet, authenticated views, accessibility, interaction QA and approved production domain remain unverified.
+- Cloudflare Pages development preview exists and production deployments are disabled. A 390 × 844 mobile full-page visual inspection and 1440 × 900 desktop top-viewport inspection passed without visible horizontal overflow. Public desktop/mobile accessibility-tree snapshots (including the open mobile menu) were inspected; tablet, keyboard/screen-reader, authenticated views, full interaction QA and approved production domain remain unverified.
+- Supabase Auth Site URL and redirect allow-list configuration have not been set through the available connector; they must be configured and tested before UAT.
+- Cloudflare account-level 2FA enforcement was observed disabled during the initial audit. The account owner must enable it before production; this account-wide setting was not changed.
 - No CozyWash owner-approved API contract or integration credentials exist; the Phase 6 blueprint is proposal-only.
 - No approved privacy policy, customer terms, refund policy or merchant agreement exists. See `SA_COMPLIANCE_READINESS.md` for the legal/compliance review checklist.
 
-- VERIFIED: GitHub migration filenames now exactly match all 23 applied remote Supabase migration versions; no local-only/remote-only version mismatch remains. Migration replay against an empty staging database is still not performed.
-- PARTIAL: CI and mobile visual preview checks have passed; role-based integration/UAT remains blocked because there are no Auth users or merchant test data and no staging branch was provisioned.
+- VERIFIED: GitHub migration filenames now exactly match all 24 applied remote Supabase migration versions; no local-only/remote-only version mismatch remains. Migration replay against an empty staging database is still not performed.
+- VERIFIED: Current CI checks (typecheck, lint, unit tests, build), including mocked Paystack candidate adapter/webhook tests, passed on commit `33ae040640472d6df8e9def185eb2c9a11087715`.
+- PARTIAL: Mobile full-page, desktop top-viewport and public accessibility-tree preview checks have been inspected; role-based integration/UAT remains blocked because there are no Auth users or merchant test data and no staging branch was provisioned.
 
 A repository build is not proof of a commercially launchable marketplace. Mark every release gate with evidence before production.
