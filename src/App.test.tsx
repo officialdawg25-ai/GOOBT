@@ -71,4 +71,9 @@ describe('GOOBT live catalogue filtering',()=>{
     expect(filterCatalogueProducts(products,'bread','food').map(p=>p.id)).toEqual(['c']);
     expect(filterCatalogueProducts(products,'',null).map(p=>p.id)).toEqual(['a','b','c']);
   });
+  it('filters by category alongside the division scope',()=>{
+    const categorized=[{...products[0],category_id:'fresh'},{...products[1],category_id:'skincare'},{...products[2],category_id:'bakery'}];
+    expect(filterCatalogueProducts(categorized,'','food','fresh').map(p=>p.id)).toEqual(['a']);
+    expect(filterCatalogueProducts(categorized,'','food','bakery').map(p=>p.id)).toEqual(['c']);
+  });
 });
