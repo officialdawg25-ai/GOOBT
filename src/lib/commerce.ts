@@ -50,7 +50,7 @@ export function filterCatalogueProducts<T extends {division_id:string;category_i
 
 export function parseZarToMinor(value:string):number|null {
   const normalized=value.trim();
-  if(!/^\\d+(?:\\.\\d{0,2})?$/.test(normalized)) return null;
+  if(!/^\d+(?:\.\d{0,2})?$/.test(normalized)) return null;
   const [wholeText,fractionText='']=normalized.split('.');
   const whole=Number(wholeText);
   const fraction=Number(fractionText.padEnd(2,'0'));
