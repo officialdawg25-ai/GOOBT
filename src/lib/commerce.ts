@@ -42,3 +42,19 @@ export function validatePromotionDraft(input:PromotionDraftInput):string|null {
   if(start!==null&&end!==null&&end<=start) return 'promotion end must be later than its start';
   return null;
 }
+
+export function filterCatalogueProducts<T extends {division_id:string;category_id?:string|null;name:string;description:string|null}>(products:readonly T[],query:string,divisionId:string|null=null,categoryId:string|null=null):T[] {
+  const normalizedQuery=query.trim().toLowerCase();
+  return products.filter(product=>(divisionId===null||product.division_id===divisionId)&&(categoryId===null||product.category_id===categoryId)&&(!normalizedQuery||product.name.toLowerCase().includes(normalizedQuery)||(product.description??'').toLowerCase().includes(normalizedQuery)));
+}
+
+export function parseZarToMinor(value:string):number|null {
+  const normalized=value.trim();
+  if(!/^\d+(?:\.\d{0,2})?$/.test(normalized)) return null;
+  const [wholeText,fractionText='']=normalized.split('.');
+  const whole=Number(wholeText);
+  const fraction=Number(fractionText.padEnd(2,'0'));
+  if(!Number.isSafeInteger(whole)||whole<0) return null;
+  const minor=whole*100+fraction;
+  return Number.isSafeInteger(minor)?minor:null;
+}
