@@ -11,3 +11,4 @@
 .checkout-review{background:#f0eee6}.checkout-review h3{margin-bottom:18px}.checkout-review .cart-total{padding-top:10px}
 .media-upload-form input[type=file]{padding:9px;background:#f8f7f2}.media-upload-form button{display:flex;align-items:center;gap:9px}
 .merchant-tools{display:grid;gap:20px}.merchant-tools .workspace-block{margin:0}
+.product-image{width:100%;height:100%;object-fit:cover;display:block}.product-placeholder:has(.product-image){padding:0;overflow:hidden;background:#e9e7df}
