@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {calculateLineTotalMinor,calculateSubtotalMinor,formatCurrencyMinor,normalizePromotionCode,validatePromotionDraft,filterCatalogueProducts} from './lib/commerce';
+import {calculateLineTotalMinor,calculateSubtotalMinor,formatCurrencyMinor,normalizePromotionCode,validatePromotionDraft,filterCatalogueProducts,parseZarToMinor} from './lib/commerce';
 
 describe('GOOBT commerce arithmetic',()=>{
   it('calculates line totals in integer minor units without floating-point drift',()=>{
@@ -75,5 +75,22 @@ describe('GOOBT live catalogue filtering',()=>{
     const categorized=[{...products[0],category_id:'fresh'},{...products[1],category_id:'skincare'},{...products[2],category_id:'bakery'}];
     expect(filterCatalogueProducts(categorized,'','food','fresh').map(p=>p.id)).toEqual(['a']);
     expect(filterCatalogueProducts(categorized,'','food','bakery').map(p=>p.id)).toEqual(['c']);
+  });
+});
+
+describe('GOOBT ZAR input parsing',()=>{
+  it('parses decimal ZAR prices to exact integer minor units',()=>{
+    expect(parseZarToMinor('0')).toBe(0);
+    expect(parseZarToMinor('1')).toBe(100);
+    expect(parseZarToMinor('1.9')).toBe(190);
+    expect(parseZarToMinor('2599.00')).toBe(259900);
+    expect(parseZarToMinor('0.05')).toBe(5);
+  });
+  it('rejects negative, malformed, excessive precision and unsafe prices',()=>{
+    expect(parseZarToMinor('-1')).toBeNull();
+    expect(parseZarToMinor('1.999')).toBeNull();
+    expect(parseZarToMinor('R20')).toBeNull();
+    expect(parseZarToMinor('')).toBeNull();
+    expect(parseZarToMinor('9007199254740992')).toBeNull();
   });
 });
