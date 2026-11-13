@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {calculateLineTotalMinor,calculateSubtotalMinor,formatCurrencyMinor} from './lib/commerce';
+import {calculateLineTotalMinor,calculateSubtotalMinor,formatCurrencyMinor,normalizePromotionCode,validatePromotionDraft} from './lib/commerce';
 
 describe('GOOBT commerce arithmetic',()=>{
   it('calculates line totals in integer minor units without floating-point drift',()=>{
@@ -30,5 +30,26 @@ describe('GOOBT commerce arithmetic',()=>{
   it('rejects invalid currency amounts/codes',()=>{
     expect(()=>formatCurrencyMinor(1.2)).toThrow(RangeError);
     expect(()=>formatCurrencyMinor(100,'INVALID')).toThrow(RangeError);
+  });
+});
+
+describe('GOOBT promotion draft validation',()=>{
+  it('normalizes codes to uppercase and strips unsupported characters',()=>{
+    expect(normalizePromotionCode(' welcome_10! ')).toBe('WELCOME10');
+  });
+  it('accepts a valid percentage promotion draft',()=>{
+    expect(validatePromotionDraft({code:'SAVE10',discountType:'percentage',discountValue:'10',usageLimit:'100',startsAt:'2026-11-13T10:00',endsAt:'2026-11-14T10:00'})).toBeNull();
+  });
+  it('rejects percentage discounts above 100 and nonpositive values',()=>{
+    expect(validatePromotionDraft({code:'SAVE',discountType:'percentage',discountValue:101})).not.toBeNull();
+    expect(validatePromotionDraft({code:'SAVE',discountType:'fixed',discountValue:0})).not.toBeNull();
+  });
+  it('rejects malformed codes and usage limits',()=>{
+    expect(validatePromotionDraft({code:'***',discountType:'fixed',discountValue:100})).not.toBeNull();
+    expect(validatePromotionDraft({code:'SAVE',discountType:'fixed',discountValue:100,usageLimit:'-2'})).not.toBeNull();
+  });
+  it('rejects reversed and invalid date ranges',()=>{
+    expect(validatePromotionDraft({code:'SAVE',discountType:'fixed',discountValue:100,startsAt:'2026-11-14T10:00',endsAt:'2026-11-13T10:00'})).not.toBeNull();
+    expect(validatePromotionDraft({code:'SAVE',discountType:'fixed',discountValue:100,startsAt:'not-a-date'})).not.toBeNull();
   });
 });
