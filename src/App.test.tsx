@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {calculateLineTotalMinor,calculateSubtotalMinor,formatCurrencyMinor,normalizePromotionCode,validatePromotionDraft} from './lib/commerce';
+import {calculateLineTotalMinor,calculateSubtotalMinor,formatCurrencyMinor,normalizePromotionCode,validatePromotionDraft,filterCatalogueProducts} from './lib/commerce';
 
 describe('GOOBT commerce arithmetic',()=>{
   it('calculates line totals in integer minor units without floating-point drift',()=>{
@@ -51,5 +51,24 @@ describe('GOOBT promotion draft validation',()=>{
   it('rejects reversed and invalid date ranges',()=>{
     expect(validatePromotionDraft({code:'SAVE',discountType:'fixed',discountValue:100,startsAt:'2026-11-14T10:00',endsAt:'2026-11-13T10:00'})).not.toBeNull();
     expect(validatePromotionDraft({code:'SAVE',discountType:'fixed',discountValue:100,startsAt:'not-a-date'})).not.toBeNull();
+  });
+});
+
+describe('GOOBT live catalogue filtering',()=>{
+  const products=[
+    {id:'a',division_id:'food',name:'Harvest Apples',description:'Fresh produce'},
+    {id:'b',division_id:'beauty',name:'Daily Moisturizer',description:'Hydrating skincare'},
+    {id:'c',division_id:'food',name:'Wholegrain Bread',description:null}
+  ];
+  it('filters by active division without leaking other division products',()=>{
+    expect(filterCatalogueProducts(products,'','food').map(p=>p.id)).toEqual(['a','c']);
+  });
+  it('searches product names and descriptions case-insensitively',()=>{
+    expect(filterCatalogueProducts(products,'HYDRATING').map(p=>p.id)).toEqual(['b']);
+    expect(filterCatalogueProducts(products,'apples').map(p=>p.id)).toEqual(['a']);
+  });
+  it('combines division filter and search, and leaves all divisions when unset',()=>{
+    expect(filterCatalogueProducts(products,'bread','food').map(p=>p.id)).toEqual(['c']);
+    expect(filterCatalogueProducts(products,'','').map(p=>p.id)).toEqual(['a','b','c']);
   });
 });
