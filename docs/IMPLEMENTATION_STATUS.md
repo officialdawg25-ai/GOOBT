@@ -45,3 +45,10 @@ No sample sellers, customer accounts, fake product catalogue, synthetic orders o
 9. Complete promotions, loyalty, support/admin operations and notification workflows.
 10. Obtain the CozyWash API contract and integration authorization.
 11. Approve production domain, monitoring, backups/restore, incident handling and rollback before enabling production deployment.
+
+
+## Development preview deployment audit — 2026-11-13
+- Cloudflare Pages project `goobt-commerce-dev` is configured with production deployments disabled; pushes to `main` are skipped by its production deployment gate.
+- Preview branch allow-list includes `foundation/goobt-full-platform` and `foundation/merchant-operations-console`.
+- Preview environment contains only the GOOBT Supabase URL and browser publishable key; no service-role key is configured in Vite/browser-facing environment variables.
+- A successful CI build does not by itself establish visual/browser QA or authorize production deployment.
