@@ -12,14 +12,14 @@ Development project: `goobt-commerce-dev`
 - Repository: `officialdawg25-ai/GOOBT`
 - Build command: `npm run build`
 - Output directory: `dist`
-- Preview branch allow-list is the feature/foundation branch during development.
+- Preview branch allow-list includes `foundation/goobt-full-platform`, `foundation/merchant-operations-console`, and the current synchronized preview branch `foundation/goobt-preview-current`.
 - Production deployment is disabled. Main-branch deployment is skipped by configuration.
-- Preview deployment hostname currently uses `goobt-commerce-dev.pages.dev`.
+- Preview deployment hostnames use the `goobt-commerce-dev.pages.dev` domain; deployment-specific URLs and branch aliases should be taken from the Cloudflare Pages deployment record rather than guessed.
 
 Configure the two Vite variables in the Pages **Preview** environment. Production variables and deployment must remain gated until the production release checklist is approved.
 
 ## Supabase Auth URL configuration
-The current application uses Supabase Auth email confirmation and browser session persistence. Before user acceptance testing:
+The current application uses Supabase Auth email confirmation and browser session persistence. The Auth Site URL and redirect allow-list have not been configured through the available project settings connector. Before user acceptance testing:
 1. Set the Auth Site URL to the approved preview hostname.
 2. Add the exact preview hostname and the local development callback URL used by the team to the Auth Redirect URLs allow-list.
 3. Verify confirmation, recovery and sign-in redirects on Android/mobile and desktop.
