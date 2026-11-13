@@ -1,7 +1,7 @@
 # GOOBT implementation status — 2026-11-13
 
 ## Current delivery state
-GOOBT has a committed initial foundation and a Cloudflare Pages development preview. Phase 0 is complete for the initial discovery baseline. The active merchant/customer workflows are under implementation in PR #2. The product remains **not production-ready and not a fully operational unified marketplace**. External provider/legal/CozyWash prerequisites remain explicit gates.
+GOOBT has a committed initial foundation and a Cloudflare Pages development preview. Phase 0 is complete for the initial discovery baseline, including a payment-provider technical evaluation (`PAYMENT_PROVIDER_EVALUATION.md`) with the provider decision still explicitly open. Merchant/customer operations PR #2 has been squash-merged into `main` after CI passed. The product remains **not production-ready and not a fully operational unified marketplace**. External provider/legal/CozyWash prerequisites remain explicit gates.
 
 ## Phase ledger
 | Phase | Status | Evidence / remaining work |
@@ -32,6 +32,12 @@ GOOBT has a committed initial foundation and a Cloudflare Pages development prev
 - Products: 0
 - Orders: 0
 No sample sellers, customer accounts, fake product catalogue, synthetic orders or review/testimonial records were inserted.
+
+## Preview deployment audit
+- Cloudflare Pages development project `goobt-commerce-dev` is configured with production deployments disabled; `main` deployments are skipped with reason `production_deployments_disabled`.
+- Preview branch allow-list includes `foundation/goobt-full-platform` and `foundation/merchant-operations-console`.
+- Preview deployment for the merchant/customer operations branch completed successfully (clone, build and deploy stages succeeded). Preview URL: `https://foundation-merchant-operatio.goobt-commerce-dev.pages.dev`. External visual/browser QA is not verified by this report.
+- The latest main CI run should be considered validated only when the run associated with its current commit has completed successfully.
 
 ## Release blockers before end-to-end production completion
 1. Register and confirm the authorized first platform owner, then perform the controlled grant documented in `OWNER_BOOTSTRAP.md`.
