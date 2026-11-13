@@ -13,6 +13,8 @@ Unit coverage currently exercises:
 - Strict decimal ZAR-to-minor-unit parsing (negative/malformed/excess precision/overflow cases).
 - Promotion draft code, discount, usage-limit and date-range validation.
 - Catalogue text, division and category filtering.
+- Paystack candidate transaction initialization, explicit split share validation, callback-origin allow-listing, provider response validation, network/HTTP failure handling.
+- Paystack current and legacy webhook signature verification, raw-body integrity, timestamp window, multiple signature entries, secret rotation, invalid-signature rejection and no-downgrade behavior. Provider requests are mocked; no real credentials or transactions are used.
 
 A passing CI run verifies these automated code checks only. It does not prove that real Auth users, RLS role policies, payment providers, external integrations, production settings, or end-to-end checkout work.
 

@@ -51,3 +51,18 @@ The platform owner and relevant legal/accounting adviser/provider must decide an
 8. Written provider approval, sandbox credentials and test webhook signing secret.
 
 Until these are settled, the existing payment intent and webhook endpoints intentionally fail closed (503). No secret keys are added to source control or browser configuration, and no payment provider is represented as connected.
+
+## Candidate adapter implementation status (not selected or enabled)
+
+A server-only candidate adapter has been added at `supabase/functions/_shared/payments/paystack.ts`:
+- Transaction initialization validates positive integer minor-unit amount, ZAR currency, customer email, reference format, HTTPS callback URL against an explicit origin allow-list, optional payment channels and dynamic split shares.
+- It accepts only an HTTPS checkout URL on Paystack's checkout host and checks the provider-returned reference matches the requested reference.
+- Webhook verification supports Paystack's current timestamped `Paystack-Signature` header (raw request bytes, 300-second timestamp tolerance, multiple `v1` signatures, secret rotation, constant-time comparison) and the legacy `x-paystack-signature` HMAC mode. An invalid current header never falls back to legacy verification.
+- Mocked unit tests are in `src/lib/payments/paystack.test.ts` and `src/lib/payments/paystack-webhook.test.ts`, included in GitHub CI.
+
+**Not wired or enabled:** the candidate is not imported by the `payment-intent` or `payment-webhook` Edge Functions; both remain fail-closed. No Paystack credentials were added and no real provider requests were made. Provider selection, account eligibility, seller-of-record/fund flow, fee bearer policy, merchant subaccount onboarding, order creation, idempotent webhook state transitions, verification/reconciliation and refunds remain required.
+
+Official implementation references:
+- [Paystack Transaction API](https://paystack.com/docs/api/transaction/)
+- [Paystack Multi-split Payments](https://paystack.com/docs/payments/multi-split-payments/)
+- [Paystack Webhooks](https://paystack.com/docs/payments/webhooks/)

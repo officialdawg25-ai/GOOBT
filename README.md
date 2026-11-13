@@ -27,7 +27,7 @@ npm run build
 Copy `.env.example` to `.env.local` and set the Supabase project URL and publishable/anon key. Never commit secrets.
 
 ## Delivery status
-GOOBT has an initial foundation, merchant/customer operations workflows, a development preview and CI. **It is not production-ready and is not yet a complete live marketplace.** Checkout preview is server-calculated but does not create orders or reserve inventory; payment and webhook endpoints fail closed until the provider and marketplace fund flow are approved. Promotions are draft-only. Support intake/operations and customer notification inbox/read state are implemented, but outbound notification delivery is not. CozyWash is independent and remains behind an owner-approved API contract.
+GOOBT has an initial foundation, merchant/customer operations workflows, a development preview and CI. **It is not production-ready and is not yet a complete live marketplace.** Checkout preview is server-calculated but does not create orders or reserve inventory; payment and webhook endpoints fail closed until the provider and marketplace fund flow are approved. An isolated Paystack candidate adapter (initialization and signature-verification code) has CI tests but is not wired or enabled. Promotions are draft-only. Support intake/operations and customer notification inbox/read state are implemented, but outbound notification delivery is not. CozyWash is independent and remains behind an owner-approved API contract.
 
 See `docs/IMPLEMENTATION_STATUS.md` for the phase-by-phase ledger and verified/partial/blocked evidence. No sample products, reviews, sales figures, testimonials, test merchants or customer orders are seeded.
 

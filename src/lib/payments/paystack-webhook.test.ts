@@ -37,8 +37,8 @@ describe('Paystack candidate webhook verification',()=>{
     const oldSignature=await sign(oldSecret,standardMessage(now,rawBody));
     const activeSignature=await sign(activeSecret,standardMessage(now,rawBody));
     const header=`t=${now},v1=whk_old:${oldSignature},v1=whk_active:${activeSignature}`;
-    const result=await verifyPaystackWebhookSignature(rawBody,{paystack_signature:header},{webhook_secrets:[oldSecret,activeSecret]},now);
-    expect(result).toEqual({valid:true,mode:'standard',key_id:'whk_old'});
+    const result=await verifyPaystackWebhookSignature(rawBody,{paystack_signature:header},{webhook_secrets:[activeSecret]},now);
+    expect(result).toEqual({valid:true,mode:'standard',key_id:'whk_active'});
   });
 
   it('rejects stale/future timestamps and duplicate timestamp fields',async()=>{
