@@ -1,35 +1,47 @@
 # GOOBT implementation status — 2026-11-13
 
 ## Current delivery state
-GOOBT is now a committed, deployed development preview and a database-backed foundation. It is **not yet a complete production commerce marketplace**. Phases 0–2 are partial-to-foundation deliverables; phases 3–5 have data-model groundwork but lack complete application workflows; phase 6 is an approved-design gate with only a fail-closed adapter skeleton.
+GOOBT has a committed initial foundation and a Cloudflare Pages development preview. Phase 0 is complete for the initial discovery baseline. The active merchant/customer workflows are under implementation in PR #2. The product remains **not production-ready and not a fully operational unified marketplace**. External provider/legal/CozyWash prerequisites remain explicit gates.
 
 ## Phase ledger
 | Phase | Status | Evidence / remaining work |
 |---|---|---|
-| 0 — Discovery & architecture | VERIFIED / completed for initial baseline | Repository, Supabase and Cloudflare audit; architecture, decision, security, roadmap and release-gate docs. Legal/payment decisions remain open. |
-| 1 — Platform foundation | PARTIAL | React/Vite app, Supabase Auth sign-in/sign-up, profile trigger, memberships and 29 public DB tables; 29/29 tables RLS enabled, 44 policies. GitHub CI branch build/type/lint/tests passed. Still needs auth redirect configuration and RLS role-matrix test with real roles. |
-| 2 — Division storefronts | PARTIAL | Responsive discovery/storefront shell, division brand tiles, search control, live published product query, empty-state handling, Cloudflare Pages preview deployment passed. Merchant catalogue CRUD, category/product detail, product media upload and mobile visual QA remain. |
-| 3 — Commerce engine | PROPOSED / schema foundation | Carts, parent customer orders, merchant orders, snapshots, inventory levels and reservation ledger structures exist. Server-side transactional checkout, row-lock reservations, pricing/promo/shipping/tax computation, idempotency, cancellations and partial fulfillment workflows are not yet implemented or tested. |
-| 4 — Payments & fulfillment | BLOCKED / skeleton only | Payment intent/webhook Edge Function skeletons fail closed with 503. Requires chosen provider, sandbox credentials, lawful seller-of-record/settlement model, webhook signature verification, reconciliation and provider tests. Fulfillment operations, carrier/collection integrations and customer notifications remain. |
-| 5 — Operations & growth | PARTIAL / schema only | Promotions, loyalty, support, addresses, notifications, inventory movement and audit structures exist. Admin/merchant operations interface, analytics, role scoped workflows and tested customer support are unfinished. |
-| 6 — CozyWash adapter | BLOCKED / contract stub | Handoff function validates user then returns 503. Requires CozyWash owner-approved versioned API, credentials, payload contract, commercial terms and data-sharing/consent. CozyWash remains independent. |
+| 0 — Discovery & architecture | VERIFIED / completed for initial baseline | Initial repo, Supabase and Cloudflare audit; architecture, decisions, security, roadmap, integration contracts and release-gate documentation. Legal/payment decisions remain open. |
+| 1 — Platform foundation | PARTIAL | React/Vite, Supabase Auth sign-in/sign-up, profile lifecycle, memberships, CI and migrations. 30 public application tables are currently RLS-enabled with 49 policies. Requires first-owner bootstrap, auth redirect setup and live-role RLS tests. |
+| 2 — Division storefronts | PARTIAL | Responsive storefront shell, division discovery, search, live published catalogue, price display and signed product-media rendering are implemented in the branch. PR #2 includes merchant application intake, draft product/variant CRUD, gated publish/pause, inventory controls and private media upload. Category/detail pages and visual/device QA remain. Category/detail page and visual/device QA remain. |
+| 3 — Commerce engine | PARTIAL / preview groundwork | Customer carts, one-open-cart index, authenticated stock-aware add-to-cart RPC, cart removal, server-calculated checkout preview and order schemas exist. Preview verifies merchant/product status, current price and stock but does not reserve stock, create an order, calculate shipping/tax or accept payment. Transactional order creation, reservations, idempotency, promo/discount computation, cancellation/partial fulfillment and concurrency tests remain. |
+| 4 — Payments & fulfilment | BLOCKED / fail-closed skeleton | Payment intent/webhook Edge Function skeletons return 503. Requires provider selection, sandbox credentials, seller-of-record/settlement/legal approval, signed webhooks, reconciliation/refunds, delivery/collection configuration and provider tests. |
+| 5 — Operations & growth | PARTIAL / workflow increment | Database structures for promotions, loyalty, support, notifications, addresses, inventory movements and audit are present. PR #2 adds merchant application review, scoped catalogue drafts, inventory locations/stock adjustment with movement/audit records, customer address management, and order-history query. Admin application/merchant/division review, customer address management, product publication, inventory controls and movement audit are in PR #2. Promotions/loyalty/support administration, analytics, fulfillment operations and end-to-end role tests remain. |
+| 6 — CozyWash adapter | BLOCKED / contract stub | Handoff function validates GOOBT customer auth and fails closed. Needs CozyWash owner-approved API contract, credentials, pricing authority, consent/data-sharing, cancellation and operational support terms. CozyWash remains independent and authoritative. |
 
 ## Verified engineering checks
-- GitHub repository PR #1 was squash-merged to `main`.
-- Development branch CI passed typecheck, lint, unit tests and production build.
-- Cloudflare Pages preview build and deployment completed successfully for the foundation branch.
-- Supabase security advisor: zero security lint findings after revoking direct RPC execution on the existing `public.rls_auto_enable()` event-trigger function.
-- Catalog audit: 29 public tables, all 29 have RLS enabled, with 44 policies.
-- Performance advisor: no remaining unindexed-FK lint; INFO-level unused-index notices are expected in a new/empty dataset, and WARN-level multiple permissive SELECT policies remain to optimize.
-- Production Cloudflare deployment is explicitly disabled; the main-branch Pages deployment was skipped for that reason.
+- Initial foundation PR #1 was squash-merged into `main`.
+- Initial foundation GitHub Actions CI passed typecheck, lint, tests and build.
+- Cloudflare Pages foundation preview deployment completed successfully; external browser inspection was not verified in this audit.
+- Supabase security advisor currently reports zero security lint findings after moving privileged RPC implementations into the private schema behind authenticated invoker wrappers.
+- Add-to-cart, merchant application/entity/division review, checkout preview and inventory stock adjustment privileged implementations enforce authenticated identity/role and use private schema implementations.
+- Latest direct audit: 30 public application tables, all 30 RLS-enabled, 49 policies, and no public table missing a policy.
+- The storage bucket for product media is private; storage-object read/write policies scope public reads to active published catalogue media and uploads to merchant/product path ownership.
+- Performance advisor still reports unused-index INFO notices in this zero/empty dataset and multiple-permissive-policy WARN notices; these require real workload analysis rather than indiscriminate index/policy removal.
+- Cloudflare production deployment remains explicitly disabled.
 
-## Release blockers before full end-to-end completion
-1. Legal merchant entities and seller-of-record roles per division.
-2. VAT/tax/invoicing, consumer terms, privacy and refund/chargeback liability approved.
-3. Payment provider selection, split-settlement feasibility, credentials and sandbox test cases.
-4. Delivery/collection providers, service levels, rates and fulfillment owner.
-5. Merchant onboarding and real product/catalogue/inventory data.
-6. RLS test matrix across anonymous, customers, merchant roles and platform staff; checkout concurrency and replay tests.
-7. Admin account/role provisioning and operational UI.
-8. CozyWash adapter API contract and authorization.
-9. Approved production domain, auth redirects, backups/restore, monitoring and rollback.
+## Data state at last direct count
+- Business divisions: 5 (draft onboarding status)
+- Merchant legal entities: 0
+- Auth users/profiles: 0
+- Products: 0
+- Orders: 0
+No sample sellers, customer accounts, fake product catalogue, synthetic orders or review/testimonial records were inserted.
+
+## Release blockers before end-to-end production completion
+1. Register and confirm the authorized first platform owner, then perform the controlled grant documented in `OWNER_BOOTSTRAP.md`.
+2. Configure Auth Site URL and approved redirect allow-list entries for the preview and development environment.
+3. Approve legal merchant entities, seller-of-record roles, VAT/tax/invoicing, consumer terms, privacy, refunds/chargebacks and settlement liability.
+4. Select payment provider; verify multi-merchant payment allocation/split-settlement feasibility; supply sandbox credentials and test cases.
+5. Define delivery/collection providers, rates, service levels and fulfilment ownership.
+6. Add real merchant onboarding and approved catalogue/inventory data; division status activation is an operational/legal decision.
+7. Complete RLS tests for anon, customer, merchant roles, platform owner/admin; run checkout concurrency/replay tests and device/browser visual QA.
+8. Implement transactional order creation/reservations, provider webhook signature verification, reconciliation, refunds and end-to-end payment state transitions.
+9. Complete promotions, loyalty, support/admin operations and notification workflows.
+10. Obtain the CozyWash API contract and integration authorization.
+11. Approve production domain, monitoring, backups/restore, incident handling and rollback before enabling production deployment.

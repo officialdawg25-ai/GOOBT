@@ -1,0 +1,1 @@
+create unique index if not exists carts_one_open_per_customer_currency on public.carts(customer_id,currency) where status='open';
