@@ -69,6 +69,6 @@ describe('GOOBT live catalogue filtering',()=>{
   });
   it('combines division filter and search, and leaves all divisions when unset',()=>{
     expect(filterCatalogueProducts(products,'bread','food').map(p=>p.id)).toEqual(['c']);
-    expect(filterCatalogueProducts(products,'','').map(p=>p.id)).toEqual(['a','b','c']);
+    expect(filterCatalogueProducts(products,'',null).map(p=>p.id)).toEqual(['a','b','c']);
   });
 });
